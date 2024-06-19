@@ -37,25 +37,25 @@ func (e *Event) Type() string {
 func Infoln(format string, v ...any) {
 	event := newLog(INFO, format, v...)
 	logCh <- event
-	print(event)
+	logPrint(event)
 }
 
 func Warnln(format string, v ...any) {
 	event := newLog(WARNING, format, v...)
 	logCh <- event
-	print(event)
+	logPrint(event)
 }
 
 func Errorln(format string, v ...any) {
 	event := newLog(ERROR, format, v...)
 	logCh <- event
-	print(event)
+	logPrint(event)
 }
 
 func Debugln(format string, v ...any) {
 	event := newLog(DEBUG, format, v...)
 	logCh <- event
-	print(event)
+	logPrint(event)
 }
 
 func Fatalln(format string, v ...any) {
@@ -79,20 +79,23 @@ func SetLevel(newLevel LogLevel) {
 	level = newLevel
 }
 
-func print(data Event) {
+func logPrint(data Event) {
 	if data.LogLevel < level {
 		return
 	}
 
 	switch data.LogLevel {
 	case INFO:
-		log.Infoln(data.Payload)
+		zlog.Info(data.Payload)
 	case WARNING:
-		log.Warnln(data.Payload)
+
+		zlog.Warn(data.Payload)
 	case ERROR:
-		log.Errorln(data.Payload)
+		zlog.Error(data.Payload)
 	case DEBUG:
-		log.Debugln(data.Payload)
+		zlog.Debug(data.Payload)
+	default:
+		panic("unhandled default case")
 	}
 }
 
